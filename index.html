@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Fortnite Sens Lab Pro v3.4</title>
+<link rel="stylesheet" href="css/styles.css">
+<meta property="og:title" content="Fortnite Sens Lab Pro">
+<meta property="og:description" content="Encuentra tu sensibilidad óptima para Fortnite con IA">
+<meta property="og:image" content="https://tu-dominio.com/assets/logo.png">
+<meta property="og:url" content="https://tu-dominio.com">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="container">
+    <h1>🎯 FORTNITE SENS LAB PRO <span class="version-badge">v3.4</span></h1>
+    <p class="subtitle">MOVIMIENTO CORREGIDO · DELTA TIME REAL · SCORING DINÁMICO</p>
+
+    <div id="panelConfig">
+        <div class="info-box">
+            <strong>📖 Cómo funciona el test</strong>
+            <ol>
+                <li><strong>Tracking:</strong> Sigue el objetivo rojo durante 25 segundos manteniéndote cerca</li>
+                <li><strong>Flicks:</strong> Haz clic rápido en los objetivos amarillos que aparecen</li>
+                <li><strong>5 Rondas:</strong> El algoritmo explora sensibilidades y converge a tu óptima</li>
+                <li><strong>Resultado:</strong> Sensibilidad personalizada con ADS y Scope calibrados</li>
+            </ol>
+            <div class="advertencia">
+                ⚠️ <strong>Importante:</strong> El movimiento del punto ahora es suave, constante y desafiante. No necesitás una precisión perfecta: el test usa tu rendimiento relativo.
+            </div>
+        </div>
+
+        <div class="config-grid">
+            <div class="config-item"><label>🖱️ DPI del Mouse</label><input id="dpi" type="number" value="800" min="400" max="3200" step="50"><div class="config-help">El DPI configurado en tu mouse (común: 800, 1600)</div></div>
+            <div class="config-item"><label>⚖️ Peso del mouse (g)</label><input id="peso" type="number" value="65" min="40" max="150" placeholder="65"><div class="config-help">&lt;55g ultraligero · 55-70g ligero · 70-85g medio · +85g pesado</div></div>
+            <div class="config-item"><label>✋ Tipo de Agarre</label><select id="grip"><option value="fingertip" selected>Fingertip (solo dedos)</option><option value="claw">Claw (garra)</option><option value="palm">Palm (mano completa)</option></select><div class="config-help"><strong>Fingertip:</strong> solo yemas · <strong>Claw:</strong> dedos arqueados · <strong>Palm:</strong> mano entera</div></div>
+            <div class="config-item"><label>🎯 Estilo de Juego</label><select id="weapon"><option value="balanced" selected>Balanceado</option><option value="shotgun">Agresivo (Builds/Edits/Flicks)</option><option value="ar">Precisión (Tracking/AR)</option></select><div class="config-help">Tu enfoque principal en Fortnite</div></div>
+        </div>
+        <button class="btn-primary" onclick="iniciarTest(false)">⚡ COMENZAR TEST COMPLETO</button>
+        <div id="datosGuardados" class="hidden"></div>
+    </div>
+
+    <div id="panelTest" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <h2 style="margin:0; color:#22c55e;">RONDA <span id="rondaActual">1</span>/<span id="totalRondasDisplay">5</span></h2>
+            <div style="background:#0f172a; padding:10px 24px; border-radius:40px; font-size:14px; border: 1px solid #334155;">
+                <span style="color:#94a3b8;">Sens:</span><span id="sensActualDisplay" style="font-weight:bold; color:#22d3ee; margin-left: 6px;">8.0%</span>
+                <span style="color:#64748b; margin-left:12px;">cm/360°:</span><span id="cm360Display" style="font-weight:bold; color:#22c55e; margin-left: 6px;">80</span>
+            </div>
+        </div>
+        <div id="tituloFase">🎯 SIGUE EL PUNTO</div>
+        <div class="stats-panel">
+            <div class="stat-card"><div class="stat-label">🎯 Precisión</div><div class="stat-value" id="trackingScore">0%</div></div>
+            <div class="stat-card"><div class="stat-label">📏 Distancia</div><div class="stat-value" id="distanciaMedia">-</div><div class="stat-unit">px promedio</div></div>
+            <div class="stat-card"><div class="stat-label">⚡ Flicks</div><div class="stat-value" id="flickScore">0</div><div class="stat-unit" id="flickDetalle"></div></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        <div id="gameArea"><div id="areaOverlay" style="font-size:32px;">🎯 HAZ CLIC PARA EMPEZAR</div></div>
+        <div id="comboIndicator" class="combo-indicator"></div>
+        <div style="background:#0f172a; border-radius:16px; padding:20px; margin:20px 0;">
+            <h4 style="margin:0 0 15px 0; color:#94a3b8; font-size: 14px; text-transform: uppercase;">📊 HISTORIAL DE RONDAS</h4>
+            <div style="overflow-x: auto;"><table class="tabla-progreso" id="tablaProgreso"><thead><tr><th>R</th><th>Sens</th><th>cm/360°</th><th>Track</th><th>Dist</th><th>Flicks</th><th>Score</th></tr></thead><tbody id="tablaBody"><tr><td colspan="7" style="color:#64748b; padding: 20px;">Completa la primera ronda...</td></tr></tbody></table></div>
+        </div>
+        <div class="flex" style="margin-top: 15px;">
+            <button class="btn-secondary" onclick="pausarTest()" style="flex:1;" id="btnPausa">⏸️ PAUSAR</button>
+            <button class="btn-success" onclick="finalizarTest()" style="flex:1;">🏁 FINALIZAR TEST</button>
+        </div>
+    </div>
+
+    <div id="panelResultados" class="hidden">
+        <h2 style="color:#22c55e; font-size: 32px; margin-bottom: 20px;">🏆 RESULTADO FINAL</h2>
+        <div style="background: linear-gradient(135deg, #0f172a, #1e293b); padding:30px; border-radius:24px; margin:20px 0; border: 2px solid #22c55e; box-shadow: 0 10px 40px rgba(34,197,94,0.2);">
+            <div style="font-size:56px; font-weight:900; color:#22d3ee; margin-bottom: 10px;" id="sensFinalDisplay">8.5%</div>
+            <div style="color:#94a3b8; font-size: 16px;">Sensibilidad Look · <span id="eDPIFinal" style="color:#22c55e; font-weight: 700;">68</span> eDPI · <span id="cm360Final" style="color:#22c55e; font-weight: 700;">80</span> cm/360°</div>
+        </div>
+        <div id="perfilJugador" class="perfil-box"></div>
+        <h3 style="color:#94a3b8; margin: 30px 0 15px 0;">🎮 CONFIGURACIÓN COMPLETA PARA FORTNITE</h3>
+        <div class="result-grid">
+            <div class="result-item"><div class="result-label">Sensibilidad X (Look)</div><div class="result-number" id="finalX">8.5%</div><div class="result-desc">Control horizontal principal</div></div>
+            <div class="result-item"><div class="result-label">Sensibilidad Y (Look)</div><div class="result-number" id="finalY">8.1%</div><div class="result-desc">Control vertical · 95% de X</div></div>
+            <div class="result-item"><div class="result-label">ADS (Apuntar)</div><div class="result-number" id="finalADS">72%</div><div class="result-desc" id="descADS"></div></div>
+            <div class="result-item"><div class="result-label">Scope (Mira)</div><div class="result-number" id="finalScope">65%</div><div class="result-desc" id="descScope"></div></div>
+        </div>
+        <div id="confirmacionBox"></div>
+        <h3 style="color:#94a3b8; margin: 30px 0 15px 0;">📊 RESUMEN COMPLETO</h3>
+        <div style="background:#0f172a; border-radius:16px; padding:20px; margin:15px 0; border: 1px solid #334155;">
+            <div style="overflow-x: auto;"><table class="tabla-progreso" id="tablaFinal"><thead><tr><th>R</th><th>Sens</th><th>cm/360°</th><th>Track</th><th>Dist</th><th>Flicks</th><th>Score</th></tr></thead><tbody id="tablaFinalBody"></tbody></table></div>
+        </div>
+        <div class="flex">
+            <button class="btn-warning" onclick="iniciarTestAfinado()" style="flex:1;" id="btnAfinar">🔍 AFINAR MÁS (3 rondas)</button>
+            <button class="btn-primary" onclick="resetearTest()" style="flex:1;">🔄 NUEVO TEST</button>
+        </div>
+    </div>
+</div>
+<footer style="margin-top: 30px; color: #64748b; font-size: 12px;">
+    Esta herramienta no está afiliada con Epic Games o Fortnite. Es un proyecto independiente para fines educativos.
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>
