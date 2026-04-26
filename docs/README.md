@@ -41,7 +41,18 @@ Herramienta web para calibrar la sensibilidad ideal de mouse en Fortnite mediant
 
 ## 📄 Licencia
 
-SPDX-License-Identifier: GPL-3.0-or-later  
+  ## 📜 License
+
+This project is **dual-licensed**:
+
+- 🆓 **GPL v3** — for open source, non-commercial, or GPL-compatible use. 
+  See [LICENSE-GPL.txt](./LICENSE-GPL.txt).
+- 💼 **Commercial License** — for proprietary or commercial use without 
+  GPL obligations. See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md).
+
+By default, GPL-3.0 applies. For commercial licensing inquiries, 
+please [open an issue](https://github.com/EspiLegends/fortnite-sens-lab/issues) 
+or contact the author.
 
 ## 🐛 Reportar bugs
 
